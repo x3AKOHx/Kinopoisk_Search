@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Kinopoisk Search</string>
+    <string name="main_title">Что сегодня посмотреть?</string>
+    <string name="film_genre">жанры</string>
+    <string name="search_button">Поиск</string>
+    <string name="random_button">Мне повезет</string>
+</resources>
