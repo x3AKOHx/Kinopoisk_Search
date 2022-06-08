@@ -17,11 +17,15 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:textColor="@color/black"
-        android:text="@string/main_title"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
+        android:fontFamily="sans-serif-medium"
+        android:lineSpacingExtra="10sp"
+        android:text="@string/main_title"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,17 +35,76 @@
         android:id="@+id/film_genre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:background="@android:drawable/editbox_background"
+        android:drawablePadding="16dp"
+        android:hint="@string/film_genre"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:textSize="22sp"
-        android:textColor="#D3D3D3"
-        android:text="@string/film_genre"
-        android:layout_below="@+id/title"
         android:layout_marginTop="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="12dp"
+        app:drawableRightCompat="@android:drawable/arrow_down_float" />
+
+    <TextView
+        android:id="@+id/country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/film_genre"
+        android:background="@android:drawable/editbox_background"
+        android:drawablePadding="16dp"
+        android:hint="@string/choose_country"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        app:drawableRightCompat="@android:drawable/arrow_down_float" />
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/country"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/centerShim"
+        android:text="@string/year" />
+
+    <TextView
+        android:id="@+id/year_pick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/country"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="17dp"
+        android:layout_toEndOf="@+id/search_button"
+        android:text="@string/year_pick_default"
+        android:textAlignment="textEnd" />
+
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/year_range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@+id/year"
+        android:stepSize="1"
+        android:valueFrom="1930"
+        android:valueTo="2022"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/country"
+        app:values="@array/year_slider_values" />
+
+
+
+
+
+
 
     <Button
         android:id="@+id/search_button"
@@ -64,5 +127,4 @@
         android:layout_toEndOf="@+id/search_button"
         android:layout_alignParentEnd="true"
         android:text="@string/random_button" />
-
 </RelativeLayout>
