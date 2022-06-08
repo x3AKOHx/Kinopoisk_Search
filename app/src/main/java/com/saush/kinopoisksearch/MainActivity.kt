@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             val to = slider.values[1].toInt()
             val range = if (from == to) from.toString()
                         else if (from == 1930 && to == 2022) "Любой"
+                        else if (to == 2022) "с $from"
                         else "с $from по $to"
             filmYear.text = range
         }
