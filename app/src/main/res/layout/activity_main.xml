@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -30,6 +30,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/favourite"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#00ffffff"
+        android:contentDescription="@string/star_button"
+        android:maxWidth="25dp"
+        android:minWidth="25dp"
+        android:src="@drawable/star" />
 
     <TextView
         android:id="@+id/film_genre"
@@ -100,11 +116,83 @@
         app:layout_constraintTop_toBottomOf="@+id/country"
         app:values="@array/year_slider_values" />
 
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/year_range"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/centerShim"
+        android:text="@string/rating" />
 
+    <TextView
+        android:id="@+id/rating_pick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/year_range"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="17dp"
+        android:layout_toEndOf="@+id/search_button"
+        android:text="@string/year_pick_default"
+        android:textAlignment="textEnd" />
 
+    <com.google.android.material.slider.Slider
+        android:id="@+id/rating_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:valueFrom="0.0"
+        android:valueTo="10.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/movies_only"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_slider"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/centerShim"
+        android:text="@string/movies_only" />
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/movies_only_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_slider"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp" />
 
+    <TextView
+        android:id="@+id/cartoons_only"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/movies_only"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="29dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/centerShim"
+        android:text="@string/cartoons_only" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/cartoons_only_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/movies_only_switch"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp" />
 
     <Button
         android:id="@+id/search_button"

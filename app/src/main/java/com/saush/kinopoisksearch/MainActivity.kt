@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.RangeSlider
+import com.google.android.material.slider.Slider
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +22,13 @@ class MainActivity : AppCompatActivity() {
 
     private val selectedGenres = ArrayList<String>()
     private val selectedCountries = ArrayList<String>()
+
+    private var yearFrom = 1930
+    private var yearTo = 2022
+    private var ratingFrom = 0.0
+
+    private var moviesOnly = false
+    private var cartoonsOnly = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,21 +101,53 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
 
-        //set sliders for film year and rating picks
+        //set slider for film year range
         val filmYear: TextView = findViewById(R.id.year_pick)
+        val yearSlider: RangeSlider = findViewById(R.id.year_range)
 
-        val discreteRangeSlider: RangeSlider = findViewById(R.id.year_range)
-        discreteRangeSlider.addOnChangeListener { slider, _, _ ->
-            val from = slider.values[0].toInt()
-            val to = slider.values[1].toInt()
-            val range = if (from == to) from.toString()
-                        else if (from == 1930 && to == 2022) "Любой"
-                        else if (to == 2022) "с $from"
-                        else "с $from по $to"
+        yearSlider.addOnChangeListener { slider, _, _ ->
+            yearFrom = slider.values[0].toInt()
+            yearTo = slider.values[1].toInt()
+            val range = if (yearFrom == yearTo) yearFrom.toString()
+                        else if (yearFrom == 1930 && yearTo == 2022) "Любой"
+                        else if (yearTo == 2022) "с $yearFrom"
+                        else "с $yearFrom по $yearTo"
             filmYear.text = range
         }
 
+        //set slider for rating pick
+        val rating: TextView = findViewById(R.id.rating_pick)
+        val ratingSlider: Slider = findViewById(R.id.rating_slider)
 
+        ratingSlider.addOnChangeListener { _, value, _ ->
+            ratingFrom = String.format("%.1f", value).toDouble()
+            rating.text = if (value.toInt() == 0) "Любой" else "от ${if 
+                    (ratingFrom.toString().substringAfter('.').toInt() == 0)
+                ratingFrom.toInt() else ratingFrom}"
+        }
+
+        //set listeners for switches
+        val moviesOnlySwitch: SwitchCompat = findViewById(R.id.movies_only_switch)
+        val cartoonsOnlySwitch: SwitchCompat = findViewById(R.id.cartoons_only_switch)
+
+        moviesOnlySwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cartoonsOnlySwitch.isEnabled = false
+                moviesOnly = true
+            } else {
+                cartoonsOnlySwitch.isEnabled = true
+                moviesOnly = false
+            }
+        }
+        cartoonsOnlySwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                moviesOnlySwitch.isEnabled = false
+                cartoonsOnly = true
+            } else {
+                moviesOnlySwitch.isEnabled = true
+                cartoonsOnly = false
+            }
+        }
 
     }
 }
