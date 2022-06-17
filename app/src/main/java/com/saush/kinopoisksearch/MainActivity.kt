@@ -2,6 +2,9 @@ package com.saush.kinopoisksearch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
@@ -148,6 +151,32 @@ class MainActivity : AppCompatActivity() {
                 cartoonsOnly = false
             }
         }
+
+        //set listeners for buttons
+        val favouritesButton: ImageButton = findViewById(R.id.favourite)
+        val searchButton: Button = findViewById(R.id.search_button)
+        val randomSearchButton: Button = findViewById(R.id.random_button)
+
+        favouritesButton.setOnClickListener { view ->
+            favouriteMovies(view)
+        }
+        searchButton.setOnClickListener { view ->
+            search(view)
+        }
+        randomSearchButton.setOnClickListener { view ->
+            getRandomMovie(view)
+        }
+    }
+
+    private fun favouriteMovies(view: View) {
+
+    }
+
+    private fun search(view: View) {
+
+    }
+
+    private fun getRandomMovie(view: View) {
 
     }
 }
