@@ -1,37 +1,34 @@
 package com.saush.kinopoisksearch
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.RangeSlider
 import com.google.android.material.slider.Slider
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.saush.kinopoisksearch.FilmData.Doc
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var filmGenre: TextView
     private lateinit var country: TextView
 
-    private val genres = arrayOf("Боевик", "Драма", "Комедия", "Триллер")
-    private val countries = arrayOf("Россия", "США", "Англия", "Индия")
+    private lateinit var favouritesButton: ImageButton
+    private lateinit var searchButton: Button
+    private lateinit var randomSearchButton: Button
 
-    private val checkedGenres = mutableListOf<Boolean>()
-    private val checkedCountries = mutableListOf<Boolean>()
-
-    private val selectedGenres = ArrayList<String>()
-    private val selectedCountries = ArrayList<String>()
-
-    private var yearFrom = 1930
-    private var yearTo = 2022
-    private var ratingFrom = 0.0
-
-    private var moviesOnly = false
-    private var cartoonsOnly = false
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,63 +39,71 @@ class MainActivity : AppCompatActivity() {
         country = findViewById(R.id.country)
 
         filmGenre.setOnClickListener {
-            if (checkedGenres.isEmpty()){
-                repeat(genres.count()) {checkedGenres.add(false)}
+            if (GenerateURL.checkedGenres.isEmpty()){
+                repeat(GenerateURL.genres.count()) {GenerateURL.checkedGenres.add(false)}
             }
 
             AlertDialog.Builder(this)
                 .setTitle("Выберите жанр")
                 .setCancelable(false)
-                .setMultiChoiceItems(genres, checkedGenres.toBooleanArray()) {_, i, isChecked ->
+                .setMultiChoiceItems(GenerateURL.genres, GenerateURL.checkedGenres.toBooleanArray())
+                {_, i, isChecked ->
                     if (isChecked)
-                        selectedGenres.add(genres[i])
+                        GenerateURL.selectedGenres.add(GenerateURL.genres[i])
                     else
-                        selectedGenres.remove(genres[i])
+                        GenerateURL.selectedGenres.remove(GenerateURL.genres[i])
 
-                    checkedGenres[i] = isChecked
+                    GenerateURL.checkedGenres[i] = isChecked
                 }
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    if (selectedGenres.size > 0)
-                    filmGenre.text = selectedGenres.joinToString(", ")
+                    if (GenerateURL.selectedGenres.size > 0)
+                    filmGenre.text = GenerateURL.selectedGenres.joinToString(", ")
                     else filmGenre.text = ""
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
                 }
                 .setNegativeButton("Cancel") {i, _, ->
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
                     i.dismiss()
                 }
                 .setNeutralButton("Clear All") { _, _ ->
-                    selectedGenres.clear()
-                    checkedGenres.clear()
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
+                    GenerateURL.selectedGenres.clear()
+                    GenerateURL.checkedGenres.clear()
                     filmGenre.text = ""
                 }
                 .show()
         }
         country.setOnClickListener {
-            if (checkedCountries.isEmpty()){
-                repeat(countries.count()) {checkedCountries.add(false)}
+            if (GenerateURL.checkedCountries.isEmpty()){
+                repeat(GenerateURL.countries.count()) {GenerateURL.checkedCountries.add(false)}
             }
 
             AlertDialog.Builder(this)
                 .setTitle("Выберите страну")
                 .setCancelable(false)
-                .setMultiChoiceItems(countries, checkedCountries.toBooleanArray()) {_, i, isChecked ->
+                .setMultiChoiceItems(GenerateURL.countries, GenerateURL.checkedCountries.toBooleanArray())
+                {_, i, isChecked ->
                     if (isChecked)
-                        selectedCountries.add(countries[i])
+                        GenerateURL.selectedCountries.add(GenerateURL.countries[i])
                     else
-                        selectedCountries.remove(countries[i])
+                        GenerateURL.selectedCountries.remove(GenerateURL.countries[i])
 
-                    checkedCountries[i] = isChecked
+                    GenerateURL.checkedCountries[i] = isChecked
                 }
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    if (selectedCountries.size > 0)
-                        country.text = selectedCountries.joinToString(", ")
+                    if (GenerateURL.selectedCountries.size > 0)
+                        country.text = GenerateURL.selectedCountries.joinToString(", ")
                     else country.text = ""
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
                 }
                 .setNegativeButton("Cancel") {i, _, ->
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
                     i.dismiss()
                 }
                 .setNeutralButton("Clear All") { _, _ ->
-                    selectedCountries.clear()
-                    checkedCountries.clear()
+                    if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
+                    GenerateURL.selectedCountries.clear()
+                    GenerateURL.checkedCountries.clear()
                     country.text = ""
                 }
                 .show()
@@ -109,12 +114,13 @@ class MainActivity : AppCompatActivity() {
         val yearSlider: RangeSlider = findViewById(R.id.year_range)
 
         yearSlider.addOnChangeListener { slider, _, _ ->
-            yearFrom = slider.values[0].toInt()
-            yearTo = slider.values[1].toInt()
-            val range = if (yearFrom == yearTo) yearFrom.toString()
-                        else if (yearFrom == 1930 && yearTo == 2022) "Любой"
-                        else if (yearTo == 2022) "с $yearFrom"
-                        else "с $yearFrom по $yearTo"
+            if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
+            GenerateURL.yearFrom = slider.values[0].toInt()
+            GenerateURL.yearTo = slider.values[1].toInt()
+            val range = if (GenerateURL.yearFrom == GenerateURL.yearTo) GenerateURL.yearFrom.toString()
+                        else if (GenerateURL.yearFrom == 1930 && GenerateURL.yearTo == 2022) "Любой"
+                        else if (GenerateURL.yearTo == 2022) "с ${GenerateURL.yearFrom}"
+                        else "с ${GenerateURL.yearFrom} по ${GenerateURL.yearTo}"
             filmYear.text = range
         }
 
@@ -123,10 +129,11 @@ class MainActivity : AppCompatActivity() {
         val ratingSlider: Slider = findViewById(R.id.rating_slider)
 
         ratingSlider.addOnChangeListener { _, value, _ ->
-            ratingFrom = String.format("%.1f", value).toDouble()
+            if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
+            GenerateURL.ratingFrom = String.format("%.1f", value).toDouble()
             rating.text = if (value.toInt() == 0) "Любой" else "от ${if 
-                    (ratingFrom.toString().substringAfter('.').toInt() == 0)
-                ratingFrom.toInt() else ratingFrom}"
+                    (GenerateURL.ratingFrom.toString().substringAfter('.').toInt() == 0)
+                GenerateURL.ratingFrom.toInt() else GenerateURL.ratingFrom}"
         }
 
         //set listeners for switches
@@ -136,26 +143,28 @@ class MainActivity : AppCompatActivity() {
         moviesOnlySwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cartoonsOnlySwitch.isEnabled = false
-                moviesOnly = true
+                GenerateURL.moviesOnly = true
             } else {
                 cartoonsOnlySwitch.isEnabled = true
-                moviesOnly = false
+                GenerateURL.moviesOnly = false
             }
+            if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
         }
         cartoonsOnlySwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 moviesOnlySwitch.isEnabled = false
-                cartoonsOnly = true
+                GenerateURL.cartoonsOnly = true
             } else {
                 moviesOnlySwitch.isEnabled = true
-                cartoonsOnly = false
+                GenerateURL.cartoonsOnly = false
             }
+            if (FilmsHolder.films.size != 0) FilmsHolder.films.clear()
         }
 
         //set listeners for buttons
-        val favouritesButton: ImageButton = findViewById(R.id.favourite)
-        val searchButton: Button = findViewById(R.id.search_button)
-        val randomSearchButton: Button = findViewById(R.id.random_button)
+        favouritesButton = findViewById(R.id.favourite)
+        searchButton = findViewById(R.id.search_button)
+        randomSearchButton = findViewById(R.id.random_button)
 
         favouritesButton.setOnClickListener { view ->
             favouriteMovies(view)
@@ -173,10 +182,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun search(view: View) {
+        getFilmsList()
 
     }
 
     private fun getRandomMovie(view: View) {
 
+    }
+
+    private fun getFilmsList() {
+        if (FilmsHolder.films.size == 0) {
+            val progressBar: ProgressBar = findViewById(R.id.main_progress_bar)
+            progressBar.visibility = View.VISIBLE
+            favouritesButton.isEnabled = false
+            searchButton.isEnabled = false
+            randomSearchButton.isEnabled = false
+            coroutineScope.launch(Dispatchers.IO) {
+                try {
+                    val response = RetrofitService.create().getMovies(GenerateURL.getURL())
+                    val result = response.body()
+                    if (result != null) {
+                        FilmsHolder.films.addAll(result.docs.filter { it.movieLength > 60 })
+                    }
+                } catch (e: Exception) {
+                    Log.e("Wrong request", "${e.stackTrace}")
+                }
+                handler.post {
+                    progressBar.visibility = View.INVISIBLE
+                    favouritesButton.isEnabled = true
+                    searchButton.isEnabled = true
+                    randomSearchButton.isEnabled = true
+                }
+            }
+        }
     }
 }

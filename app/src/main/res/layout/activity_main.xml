@@ -191,6 +191,15 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="17dp" />
 
+    <ProgressBar
+        android:id="@+id/main_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cartoons_only_switch"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
     <Button
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
