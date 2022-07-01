@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#0000"
+    android:layout_margin="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"
+        android:maxWidth="80dp"
+        android:minWidth="80dp"
+        tools:ignore="MissingConstraints"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="poster" />
+
+    <TextView
+        android:id="@+id/film_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Film name"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/film_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="(2022)"
+        android:textColor="#706B6B"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/film_name" />
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/film_year"
+        android:text="Рейтинг: Кинопоиск - " />
+
+    <TextView
+        android:id="@+id/kp_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="0.0"
+        android:textColor="#05880B"
+        app:layout_constraintStart_toEndOf="@+id/rating"
+        app:layout_constraintTop_toBottomOf="@+id/film_year" />
+
+    <TextView
+        android:id="@+id/imdb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text=", IMDb - "
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/kp_rating"
+        app:layout_constraintTop_toBottomOf="@+id/film_year" />
+
+    <TextView
+        android:id="@+id/imdb_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="0.0"
+        android:textColor="#05880B"
+        app:layout_constraintStart_toEndOf="@+id/imdb"
+        app:layout_constraintTop_toBottomOf="@+id/film_year" />
+
+    <TextView
+        android:id="@+id/length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:text="Продолжительность фильма: "
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/rating" />
+
+    <TextView
+        android:id="@+id/film_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="x"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/length"
+        app:layout_constraintTop_toBottomOf="@+id/rating" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/film_length"
+        app:layout_constraintTop_toBottomOf="@+id/rating"
+        android:text=" мин."
+        android:textColor="@color/black" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
