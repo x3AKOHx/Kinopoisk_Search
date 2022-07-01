@@ -1,5 +1,6 @@
 package com.saush.kinopoisksearch
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,12 +10,12 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.RangeSlider
 import com.google.android.material.slider.Slider
-import com.saush.kinopoisksearch.FilmData.Doc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -182,15 +183,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun search(view: View) {
-        getFilmsList()
-
-    }
-
-    private fun getRandomMovie(view: View) {
-
-    }
-
-    private fun getFilmsList() {
         if (FilmsHolder.films.size == 0) {
             val progressBar: ProgressBar = findViewById(R.id.main_progress_bar)
             progressBar.visibility = View.VISIBLE
@@ -202,9 +194,15 @@ class MainActivity : AppCompatActivity() {
                     val response = RetrofitService.create().getMovies(GenerateURL.getURL())
                     val result = response.body()
                     if (result != null) {
-                        FilmsHolder.films.addAll(result.docs.filter { it.movieLength > 60 })
+                        FilmsHolder.films.addAll(result.docs.filter {
+                            it.movieLength > 60 && it.name.isNotEmpty()
+                        })
                     }
                 } catch (e: Exception) {
+                    handler.post {
+                        Toast.makeText(applicationContext, "Отсутствует соединение с сервером",
+                            Toast.LENGTH_LONG).show()
+                    }
                     Log.e("Wrong request", "${e.stackTrace}")
                 }
                 handler.post {
@@ -213,7 +211,27 @@ class MainActivity : AppCompatActivity() {
                     searchButton.isEnabled = true
                     randomSearchButton.isEnabled = true
                 }
+                if (FilmsHolder.films.size == 0) {
+                    handler.post {
+                        Toast.makeText(
+                            applicationContext,
+                            "По вашему запросу ничего не нашлось",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
+                } else {
+                    val intent = Intent(applicationContext, FilmsList::class.java)
+                    startActivity(intent)
+                }
             }
+        } else {
+            val intent = Intent(applicationContext, FilmsList::class.java)
+            startActivity(intent)
         }
+    }
+
+    private fun getRandomMovie(view: View) {
+
     }
 }
