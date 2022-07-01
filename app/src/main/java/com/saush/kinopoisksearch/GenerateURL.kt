@@ -38,6 +38,6 @@ object GenerateURL {
         else "&field=typeNumber&search=1&field=typeNumber&search=3"
 
         return "movie?field=rating.kp&search=$ratingFrom-10&field=year&search=$yearFrom-$yearTo" +
-                "$genreReq$countryReq$type&limit=999&token=$TOKEN"
+                "$genreReq$countryReq$type&sortField=rating.kp&sortType=-1&limit=999&token=$TOKEN"
     }
 }
