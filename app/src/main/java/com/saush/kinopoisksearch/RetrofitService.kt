@@ -1,6 +1,6 @@
 package com.saush.kinopoisksearch
 
-import com.saush.kinopoisksearch.FilmData.FilmInfo
+import com.saush.kinopoisksearch.filmData.FilmInfo
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

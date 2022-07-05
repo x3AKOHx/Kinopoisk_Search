@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.saush.kinopoisksearch.FilmData.Doc
+import com.saush.kinopoisksearch.filmData.Doc
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 
-class FilmItemAdapter(private val context: Context, private val filmsList: MutableList<Doc>):
+class FilmItemAdapter(
+    private val context: Context,
+    private val filmsList: MutableList<Doc>,
+    private val onClickListener: OnClickListener):
     RecyclerView.Adapter<FilmItemAdapter.FilmItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmItemViewHolder {
@@ -30,8 +33,11 @@ class FilmItemAdapter(private val context: Context, private val filmsList: Mutab
         builder.downloader(OkHttp3Downloader(context))
         builder.build().load(film.poster.previewUrl)
             .placeholder(context.resources.getDrawable(R.drawable.ic_launcher_foreground, context.theme))
-            .networkPolicy(NetworkPolicy.OFFLINE).into(holder.poster)
+            .into(holder.poster)
 
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(film)
+        }
         holder.bind(film)
     }
 
@@ -40,14 +46,13 @@ class FilmItemAdapter(private val context: Context, private val filmsList: Mutab
     }
 
     class FilmItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
         private val filmName: TextView = itemView.findViewById(R.id.film_name)
         private val filmYear: TextView = itemView.findViewById(R.id.film_year)
         private val kpRating: TextView = itemView.findViewById(R.id.kp_rating)
         private val imdbRating: TextView = itemView.findViewById(R.id.imdb_rating)
         private val filmLength: TextView = itemView.findViewById(R.id.film_length)
 
-        val poster: ImageView = itemView.findViewById(R.id.imageView)
+        var poster: ImageView = itemView.findViewById(R.id.imageView)
 
         fun bind(film: Doc) {
             filmName.text = film.name
@@ -55,8 +60,10 @@ class FilmItemAdapter(private val context: Context, private val filmsList: Mutab
             kpRating.text = film.rating.kp.toString()
             imdbRating.text = film.rating.imdb.toString()
             filmLength.text = film.movieLength.toString()
-
-
         }
+    }
+
+    class OnClickListener(val clickListener: (film: Doc) -> Unit) {
+        fun onClick(film: Doc) = clickListener(film)
     }
 }

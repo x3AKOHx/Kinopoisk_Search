@@ -1,4 +1,4 @@
-package com.saush.kinopoisksearch
+package com.saush.kinopoisksearch.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.RangeSlider
 import com.google.android.material.slider.Slider
+import com.saush.kinopoisksearch.FilmsHolder
+import com.saush.kinopoisksearch.GenerateURL
+import com.saush.kinopoisksearch.R
+import com.saush.kinopoisksearch.RetrofitService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,14 +45,14 @@ class MainActivity : AppCompatActivity() {
 
         filmGenre.setOnClickListener {
             if (GenerateURL.checkedGenres.isEmpty()){
-                repeat(GenerateURL.genres.count()) {GenerateURL.checkedGenres.add(false)}
+                repeat(GenerateURL.genres.count()) { GenerateURL.checkedGenres.add(false)}
             }
 
             AlertDialog.Builder(this)
                 .setTitle("Выберите жанр")
                 .setCancelable(false)
-                .setMultiChoiceItems(GenerateURL.genres, GenerateURL.checkedGenres.toBooleanArray())
-                {_, i, isChecked ->
+                .setMultiChoiceItems(GenerateURL.genres,
+                    GenerateURL.checkedGenres.toBooleanArray()) {_, i, isChecked ->
                     if (isChecked)
                         GenerateURL.selectedGenres.add(GenerateURL.genres[i])
                     else
@@ -76,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         }
         country.setOnClickListener {
             if (GenerateURL.checkedCountries.isEmpty()){
-                repeat(GenerateURL.countries.count()) {GenerateURL.checkedCountries.add(false)}
+                repeat(GenerateURL.countries.count()) { GenerateURL.checkedCountries.add(false)}
             }
 
             AlertDialog.Builder(this)
@@ -134,7 +138,8 @@ class MainActivity : AppCompatActivity() {
             GenerateURL.ratingFrom = String.format("%.1f", value).toDouble()
             rating.text = if (value.toInt() == 0) "Любой" else "от ${if 
                     (GenerateURL.ratingFrom.toString().substringAfter('.').toInt() == 0)
-                GenerateURL.ratingFrom.toInt() else GenerateURL.ratingFrom}"
+                GenerateURL.ratingFrom.toInt() else GenerateURL.ratingFrom
+            }"
         }
 
         //set listeners for switches

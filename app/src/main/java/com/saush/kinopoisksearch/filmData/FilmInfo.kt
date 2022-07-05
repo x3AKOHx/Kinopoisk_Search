@@ -1,4 +1,4 @@
-package com.saush.kinopoisksearch.FilmData
+package com.saush.kinopoisksearch.filmData
 
 data class FilmInfo(
     val docs: List<Doc>,

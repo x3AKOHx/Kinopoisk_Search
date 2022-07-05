@@ -1,10 +1,10 @@
-package com.saush.kinopoisksearch.FilmData
+package com.saush.kinopoisksearch.filmData
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Name(
+data class ExternalId(
     @SerializedName("_id")
     val id: String,
-    val name: String
+    val imdb: String
 )
