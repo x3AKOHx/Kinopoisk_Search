@@ -31,7 +31,7 @@ class FilmItemAdapter(
 
         val builder = Picasso.Builder(context)
         builder.downloader(OkHttp3Downloader(context))
-        builder.build().load(film.poster.previewUrl)
+        builder.build().load(film.poster!!.previewUrl)
             .placeholder(context.resources.getDrawable(R.drawable.ic_launcher_foreground, context.theme))
             .into(holder.poster)
 
@@ -57,7 +57,7 @@ class FilmItemAdapter(
         fun bind(film: Doc) {
             filmName.text = film.name
             filmYear.text = film.year.toString()
-            kpRating.text = film.rating.kp.toString()
+            kpRating.text = film.rating!!.kp.toString()
             imdbRating.text = film.rating.imdb.toString()
             filmLength.text = film.movieLength.toString()
         }

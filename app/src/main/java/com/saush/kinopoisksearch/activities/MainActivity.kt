@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                     val result = response.body()
                     if (result != null) {
                         FilmsHolder.films.addAll(result.docs.filter {
-                            it.movieLength > 60 && it.name.isNotEmpty()
+                            it.movieLength != null && it.movieLength > 60 && it.name != null
                         })
                     }
                 } catch (e: Exception) {
