@@ -26,7 +26,7 @@
         android:layout_height="355dp"
         android:layout_marginTop="5dp"
         android:contentDescription="main_poster"
-        android:src="@drawable/aaa"
+        android:src="@drawable/ic_launcher_foreground"
         app:layout_constraintTop_toBottomOf="@+id/main_film_name"
         app:layout_constraintStart_toStartOf="@+id/main_film_name" />
 
@@ -165,14 +165,17 @@
 
     <TextView
         android:id="@+id/main_film_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="---"
-        android:textSize="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/main_genre"
         app:layout_constraintTop_toBottomOf="@id/main_country"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="4sp"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeStepGranularity="1sp"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"/>
 
     <TextView
