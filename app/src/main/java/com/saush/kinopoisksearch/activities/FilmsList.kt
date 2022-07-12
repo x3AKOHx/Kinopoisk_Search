@@ -17,14 +17,18 @@ import kotlinx.coroutines.launch
 
 class FilmsList : AppCompatActivity() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private var isSaved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_films_list)
 
+        isSaved = intent.getBooleanExtra("saved", true)
+        val filmsList = if (isSaved) FilmsHolder.savedFilms else FilmsHolder.films
+
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val filmItemAdapter = FilmItemAdapter(this, FilmsHolder.films, FilmItemAdapter.OnClickListener {
+        val filmItemAdapter = FilmItemAdapter(this, filmsList, FilmItemAdapter.OnClickListener {
             onClick(it)
         })
 
@@ -38,18 +42,27 @@ class FilmsList : AppCompatActivity() {
     }
 
     private fun onClick(film: Doc) {
-        val kpId = film.id
-        val url = "api/v2.2/films/$kpId"
-        val apiKey = "ef688970-af41-4ee5-9b1b-9a44f950fc4f"
-        val type = "application/json"
-
-        coroutineScope.launch {
-            val response = RetroFitServiceHelper.create().getInfo(url, apiKey, type)
-            val result = response.body()!!
+        if (isSaved) {
+            val filmInfo = FilmsHolder.savedFilmsInfo[film.id]
 
             val intent = Intent(applicationContext, FilmPage::class.java)
-            intent.putExtra("film", result)
+            intent.putExtra("film", film)
+            intent.putExtra("filmInfo", filmInfo)
             startActivity(intent)
+        } else {
+            val url = "api/v2.2/films/${film.id}"
+            val apiKey = "ef688970-af41-4ee5-9b1b-9a44f950fc4f"
+            val type = "application/json"
+
+            coroutineScope.launch {
+                val response = RetroFitServiceHelper.create().getInfo(url, apiKey, type)
+                val result = response.body()!!
+
+                val intent = Intent(applicationContext, FilmPage::class.java)
+                intent.putExtra("film", film)
+                intent.putExtra("filmInfo", result)
+                startActivity(intent)
+            }
         }
     }
 }

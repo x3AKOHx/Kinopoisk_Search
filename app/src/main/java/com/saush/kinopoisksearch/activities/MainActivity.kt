@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var favouritesButton: ImageButton
     private lateinit var searchButton: Button
-    private lateinit var randomSearchButton: Button
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val handler = Handler(Looper.getMainLooper())
@@ -170,7 +169,6 @@ class MainActivity : AppCompatActivity() {
         //set listeners for buttons
         favouritesButton = findViewById(R.id.favourite)
         searchButton = findViewById(R.id.search_button)
-        randomSearchButton = findViewById(R.id.random_button)
 
         favouritesButton.setOnClickListener { view ->
             favouriteMovies(view)
@@ -178,13 +176,20 @@ class MainActivity : AppCompatActivity() {
         searchButton.setOnClickListener { view ->
             search(view)
         }
-        randomSearchButton.setOnClickListener { view ->
-            getRandomMovie(view)
-        }
     }
 
     private fun favouriteMovies(view: View) {
-
+        FilmsHolder.loadFilms(applicationContext)
+        if (FilmsHolder.savedFilms.size > 0) {
+            val intent = Intent(applicationContext, FilmsList::class.java)
+                    intent.putExtra("saved", true)
+                    startActivity(intent)
+        } else {
+            Toast.makeText(applicationContext,
+                            "У вас нет сохраненных фильмов",
+                            Toast.LENGTH_LONG
+                        ).show()
+        }
     }
 
     private fun search(view: View) {
@@ -193,7 +198,6 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             favouritesButton.isEnabled = false
             searchButton.isEnabled = false
-            randomSearchButton.isEnabled = false
             coroutineScope.launch(Dispatchers.IO) {
                 try {
                     val response = RetrofitService.create().getMovies(GenerateURL.getURL())
@@ -214,29 +218,24 @@ class MainActivity : AppCompatActivity() {
                     progressBar.visibility = View.INVISIBLE
                     favouritesButton.isEnabled = true
                     searchButton.isEnabled = true
-                    randomSearchButton.isEnabled = true
                 }
                 if (FilmsHolder.films.size == 0) {
                     handler.post {
-                        Toast.makeText(
-                            applicationContext,
-                            "По вашему запросу ничего не нашлось",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
+                        Toast.makeText(applicationContext,
+                                  "По вашему запросу ничего не нашлось",
+                                       Toast.LENGTH_LONG
+                        ).show()
                     }
                 } else {
                     val intent = Intent(applicationContext, FilmsList::class.java)
+                    intent.putExtra("saved", false)
                     startActivity(intent)
                 }
             }
         } else {
             val intent = Intent(applicationContext, FilmsList::class.java)
+            intent.putExtra("saved", false)
             startActivity(intent)
         }
-    }
-
-    private fun getRandomMovie(view: View) {
-
     }
 }
