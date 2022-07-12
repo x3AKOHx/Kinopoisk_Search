@@ -9,9 +9,13 @@
 
     <TextView
         android:id="@+id/main_film_name"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:text="Название фильма"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="4sp"
+        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeStepGranularity="1sp"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="25sp"
@@ -19,6 +23,18 @@
         android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/main_favourites"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/empty_star"
+        app:layout_constraintStart_toEndOf="@+id/main_film_name"
+        app:layout_constraintTop_toTopOf="@+id/main_film_name"
+        android:scaleType="centerCrop"
+        android:background="@color/white"
+        android:contentDescription="fav_button" />
 
     <ImageView
         android:id="@+id/main_poster"
@@ -40,7 +56,7 @@
         app:layout_constraintStart_toEndOf="@+id/main_poster"
         app:layout_constraintTop_toBottomOf="@id/main_film_name"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="70dp"/>
 
     <TextView
         android:id="@+id/main_kp_rating"
@@ -51,7 +67,7 @@
         android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/main_KP"
         app:layout_constraintTop_toBottomOf="@+id/main_film_name"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="70dp"/>
 
     <TextView
         android:id="@+id/main_imdb"
@@ -166,7 +182,7 @@
     <TextView
         android:id="@+id/main_film_description"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="120dp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/main_genre"
         app:layout_constraintTop_toBottomOf="@id/main_country"
