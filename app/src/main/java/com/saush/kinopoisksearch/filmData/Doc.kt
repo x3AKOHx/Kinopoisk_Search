@@ -1,7 +1,6 @@
 package com.saush.kinopoisksearch.filmData
 
-
-import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Doc(
     val alternativeName: String?,
@@ -20,4 +19,4 @@ data class Doc(
     val type: String?,
     val votes: Votes?,
     val year: Int?
-)
+): Serializable

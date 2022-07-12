@@ -1,7 +1,7 @@
 package com.saush.kinopoisksearch.filmData
 
-
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Votes(
     val await: Int?,
@@ -12,4 +12,4 @@ data class Votes(
     val kp: Int?,
     val russianFilmCritics: Int?,
     val tmdb: Int?
-)
+): Serializable

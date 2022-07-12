@@ -1,7 +1,7 @@
 package com.saush.kinopoisksearch.filmData
 
-
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Rating(
     val await: Double?,
@@ -12,4 +12,4 @@ data class Rating(
     val kp: Double?,
     val russianFilmCritics: Double?,
     val tmdb: Double?
-)
+): Serializable

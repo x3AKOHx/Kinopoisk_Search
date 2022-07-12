@@ -1,7 +1,7 @@
 package com.saush.kinopoisksearch.filmData
 
-
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class ExternalId(
     @SerializedName("_id")
@@ -9,4 +9,4 @@ data class ExternalId(
     val imdb: String?,
     val kpHD: String?,
     val tmdb: Int?
-)
+): Serializable
