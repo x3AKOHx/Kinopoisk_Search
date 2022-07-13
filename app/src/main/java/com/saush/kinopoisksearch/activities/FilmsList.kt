@@ -18,27 +18,53 @@ import kotlinx.coroutines.launch
 class FilmsList : AppCompatActivity() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private var isSaved = false
+    private var filmsList = mutableListOf<Doc>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_films_list)
 
         isSaved = intent.getBooleanExtra("saved", true)
-        val filmsList = if (isSaved) FilmsHolder.savedFilms else FilmsHolder.films
 
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val filmItemAdapter = FilmItemAdapter(this, filmsList, FilmItemAdapter.OnClickListener {
-            onClick(it)
-        })
+        if (!isSaved) {
+            filmsList = if (isSaved) FilmsHolder.savedFilms else FilmsHolder.films
 
-        recyclerView.adapter = filmItemAdapter
-        recyclerView.layoutManager = layoutManager
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                baseContext, layoutManager.orientation
+            val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+            val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            val filmItemAdapter = FilmItemAdapter(this, filmsList, FilmItemAdapter.OnClickListener {
+                onClick(it)
+            })
+
+            recyclerView.adapter = filmItemAdapter
+            recyclerView.layoutManager = layoutManager
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    baseContext, layoutManager.orientation
+                )
             )
-        )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isSaved && (filmsList.size != FilmsHolder.savedFilms.size)) {
+            filmsList.clear()
+            filmsList.addAll(FilmsHolder.savedFilms)
+
+            val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+            val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            val filmItemAdapter = FilmItemAdapter(this, filmsList, FilmItemAdapter.OnClickListener {
+                onClick(it)
+            })
+
+            recyclerView.adapter = filmItemAdapter
+            recyclerView.layoutManager = layoutManager
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    baseContext, layoutManager.orientation
+                )
+            )
+        }
     }
 
     private fun onClick(film: Doc) {

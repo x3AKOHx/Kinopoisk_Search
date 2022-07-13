@@ -65,12 +65,12 @@ class FilmPage : AppCompatActivity() {
         for (i in 0 until filmInfo.genres!!.size - 1) {
             allGenres += "${filmInfo.genres[i].genre}, "
         }
-        allGenres += "${filmInfo.genres[filmInfo.genres.size - 1].genre}."
+        allGenres += filmInfo.genres[filmInfo.genres.size - 1].genre
 
         for (i in 0 until filmInfo.countries!!.size - 1) {
             allCountries += "${filmInfo.countries[i].country}, "
         }
-        allCountries += "${filmInfo.countries[filmInfo.countries.size - 1].country}."
+        allCountries += filmInfo.countries[filmInfo.countries.size - 1].country
         val des = if ((filmInfo.shortDescription != null) && (filmInfo.shortDescription.length > 5))
             filmInfo.shortDescription
         else filmInfo.description
