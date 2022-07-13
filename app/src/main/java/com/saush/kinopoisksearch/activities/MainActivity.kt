@@ -179,16 +179,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun favouriteMovies(view: View) {
-        FilmsHolder.loadFilms(applicationContext)
-        if (FilmsHolder.savedFilms.size > 0) {
-            val intent = Intent(applicationContext, FilmsList::class.java)
-                    intent.putExtra("saved", true)
-                    startActivity(intent)
-        } else {
-            Toast.makeText(applicationContext,
-                            "У вас нет сохраненных фильмов",
-                            Toast.LENGTH_LONG
-                        ).show()
+        coroutineScope.launch(Dispatchers.IO) {
+            FilmsHolder.loadFilms(applicationContext)
+            if (FilmsHolder.savedFilms.size > 0) {
+                val intent = Intent(applicationContext, FilmsList::class.java)
+                intent.putExtra("saved", true)
+                startActivity(intent)
+            } else {
+                handler.post {
+                    Toast.makeText(applicationContext,
+                        "У вас нет сохраненных фильмов",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 
